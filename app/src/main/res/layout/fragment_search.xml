@@ -8,10 +8,11 @@
         android:id="@+id/search_filter"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <LinearLayout
+        <!--<LinearLayout
             android:id="@+id/search_group_ll"
             android:layout_alignParentTop="true"
             android:weightSum="3"
+            android:visibility="invisible"
             android:layout_width="match_parent"
             android:layout_height="60dp">
             <LinearLayout
@@ -69,12 +70,12 @@
 
             </LinearLayout>
         </LinearLayout>
-
+-->
         <SearchView
             android:id="@+id/search_key"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/search_group_ll"
+
             android:iconifiedByDefault="false"
             android:queryHint="Search"
             android:layout_marginBottom="16dp"/>

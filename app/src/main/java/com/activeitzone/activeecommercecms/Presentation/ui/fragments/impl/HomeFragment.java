@@ -62,6 +62,7 @@ import java.util.List;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import cn.iwgang.countdownview.CountdownView;
@@ -266,8 +267,11 @@ public class HomeFragment extends Fragment implements HomeView, CategoryClickLis
     public void setFeaturedProducts(List<Product> products) {
         RecyclerView recyclerView = v.findViewById(R.id.featured_products);
         GridLayoutManager horizontalLayoutManager
-                = new GridLayoutManager(getActivity(), 2, GridLayoutManager.VERTICAL, false);
+                = new GridLayoutManager(getActivity(), 2, GridLayoutManager.VERTICAL, true);
         recyclerView.setLayoutManager(horizontalLayoutManager);
+
+
+
         FeaturedProductAdapter adapter = new FeaturedProductAdapter(getActivity(), products, this);
         recyclerView.addItemDecoration( new LayoutMarginDecoration( 2,  AppConfig.convertDpToPx(getContext(), 10)) );
         recyclerView.setAdapter(adapter);
