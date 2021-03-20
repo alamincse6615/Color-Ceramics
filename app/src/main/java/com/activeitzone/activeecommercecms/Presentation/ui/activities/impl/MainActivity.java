@@ -98,8 +98,8 @@ public class MainActivity extends AppCompatActivity implements AppSettingsIntera
         cart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                navView.setSelectedItemId(R.id.navigation_cart);
-                loadFragment(cartFragment);
+                navView.setSelectedItemId(R.id.navigation_home);
+                loadFragment(homeFragment);
             }
         });
 

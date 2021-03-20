@@ -12,7 +12,7 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:scaleType="fitCenter"
-            android:src="@drawable/shopping_cart"
+            android:src="@drawable/ic_home"
             android:layout_gravity="center_vertical"
             android:background="@android:color/transparent"
             android:layout_alignParentTop="true"

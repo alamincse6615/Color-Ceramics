@@ -64,6 +64,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import cn.iwgang.countdownview.CountdownView;
 
@@ -82,6 +83,7 @@ public class HomeFragment extends Fragment implements HomeView, CategoryClickLis
     private  AuctionProductAdapter adapter;
     private TextView flash_deals_text;
     private CountdownView mCvCountdownView;
+    private SwipeRefreshLayout swipe_container;
 
     @Nullable
     @Override
@@ -95,6 +97,14 @@ public class HomeFragment extends Fragment implements HomeView, CategoryClickLis
         flash_deal_section = v.findViewById(R.id.flash_deal_section);
         flash_deals_text = v.findViewById(R.id.flash_deals_text);
         mCvCountdownView = (CountdownView) v.findViewById(R.id.countdown);
+
+        swipe_container = v.findViewById(R.id.swipe_container);
+        swipe_container.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                
+            }
+        });
 
         auction_product_section.setVisibility(View.GONE);
         todays_deal_section.setVisibility(View.GONE);
@@ -265,15 +275,14 @@ public class HomeFragment extends Fragment implements HomeView, CategoryClickLis
 
     @Override
     public void setFeaturedProducts(List<Product> products) {
+        Log.d("-----product----",products.toString());
         RecyclerView recyclerView = v.findViewById(R.id.featured_products);
         GridLayoutManager horizontalLayoutManager
-                = new GridLayoutManager(getActivity(), 2, GridLayoutManager.VERTICAL, true);
+                = new GridLayoutManager(getActivity(), 4, GridLayoutManager.VERTICAL, true);
         recyclerView.setLayoutManager(horizontalLayoutManager);
 
-
-
         FeaturedProductAdapter adapter = new FeaturedProductAdapter(getActivity(), products, this);
-        recyclerView.addItemDecoration( new LayoutMarginDecoration( 2,  AppConfig.convertDpToPx(getContext(), 10)) );
+        recyclerView.addItemDecoration( new LayoutMarginDecoration( 5,  AppConfig.convertDpToPx(getContext(), 10)) );
         recyclerView.setAdapter(adapter);
     }
 
@@ -281,10 +290,10 @@ public class HomeFragment extends Fragment implements HomeView, CategoryClickLis
     public void setTopCategories(List<Category> categories) {
         RecyclerView recyclerView = v.findViewById(R.id.top_categories);
         GridLayoutManager horizontalLayoutManager
-                = new GridLayoutManager(getActivity(), 1, GridLayoutManager.HORIZONTAL, false);
+                = new GridLayoutManager(getActivity(), 5, GridLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(horizontalLayoutManager);
         TopCategoryAdapter adapter = new TopCategoryAdapter(getActivity(), categories, HomeFragment.this);
-        recyclerView.addItemDecoration( new LayoutMarginDecoration( 1,  AppConfig.convertDpToPx(getContext(), 10)) );
+        recyclerView.addItemDecoration( new LayoutMarginDecoration( 5,  AppConfig.convertDpToPx(getContext(), 10)) );
         recyclerView.setAdapter(adapter);
     }
 
