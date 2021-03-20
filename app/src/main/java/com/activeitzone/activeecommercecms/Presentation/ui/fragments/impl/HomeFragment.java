@@ -87,20 +87,28 @@ public class HomeFragment extends Fragment implements HomeView, CategoryClickLis
     private AuthResponse authResponse;
     private ProgressDialog progressDialog;
     private BottomSheetDialog dialog;
-    private RecyclerView auction_recyclerView,product_list;
+    private RecyclerView auction_recyclerView,product_list,rv_floor_tiles,rv_epoxyFloorin,rv_sanitary;
     private List<AuctionProduct> mAuctionProducts = new ArrayList<>();
     private  AuctionProductAdapter adapter;
     private TextView flash_deals_text;
     private CountdownView mCvCountdownView;
     private SwipeRefreshLayout swipe_container;
-    String ProductUrl = "https://colorceramics.com/api/v1/products/category/46";
 
 
 
+    //tiles start
+    String tilesUrl = "https://colorceramics.com/api/v1/products/category/46";
     private List<Product> mProducts = new ArrayList<>();
     private ProductListingResponse productListingResponse = null;
     private ProductListingPresenter productListingPresenter;
-    private ProductListingAdapter adapterP;
+    private ProductListingAdapter adapterP,sanitaryAdapter;
+    //tiles end
+
+    String floorTilesUrl = "https://colorceramics.com/api/v1/products/category/48";
+    String epoxyFlooringUrl = "https://colorceramics.com/api/v1/products/category/75";
+    String sanitaryUrl = "https://colorceramics.com/api/v1/products/category/56";
+
+
 
 
 
@@ -118,8 +126,15 @@ public class HomeFragment extends Fragment implements HomeView, CategoryClickLis
         mCvCountdownView = (CountdownView) v.findViewById(R.id.countdown);
 
         product_list = v.findViewById(R.id.product_list);
+        rv_floor_tiles = v.findViewById(R.id.rv_floor_tiles);
+        rv_epoxyFloorin = v.findViewById(R.id.rv_epoxyFloorin);
+        rv_sanitary = v.findViewById(R.id.rv_sanitary);
 
-        productListTest(ProductUrl);
+        tilesProducts(tilesUrl);
+        epoxyFloorin(epoxyFlooringUrl);
+        sanitary(sanitaryUrl);
+
+
 
         swipe_container = v.findViewById(R.id.swipe_container);
         swipe_container.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -153,6 +168,12 @@ public class HomeFragment extends Fragment implements HomeView, CategoryClickLis
         homePresenter.getBanners();
 
         return v;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        floorTilesProducts(floorTilesUrl);
     }
 
     @Override
@@ -460,7 +481,10 @@ public class HomeFragment extends Fragment implements HomeView, CategoryClickLis
     }
 
 
-    public void productListTest(String url){
+    /**
+     tiles product show from here
+     */
+    public void tilesProducts(String url){
 
         //url  https://colorceramics.com/api/v1/products/category/46
 
@@ -495,4 +519,120 @@ public class HomeFragment extends Fragment implements HomeView, CategoryClickLis
             productListingPresenter.getProducts(productListingResponse.getLinks().getNext().toString());
         }
     }
+    /**
+     tiles product showend from here
+     */
+
+
+    /**
+     floorTiles product show from here
+     */
+    public void floorTilesProducts(String url){
+
+        //url  https://colorceramics.com/api/v1/products/category/46
+
+
+        adapterP = new ProductListingAdapter(getApplicationContext(), mProducts, this);
+        //recyclerView = v.findViewById(R.id.product_list);
+
+
+        GridLayoutManager horizontalLayoutManager
+                = new GridLayoutManager(getApplicationContext(), 4);
+        rv_floor_tiles.setLayoutManager(horizontalLayoutManager);
+        //adapter.setClickListener(this);
+        RecyclerViewMargin decoration = new RecyclerViewMargin(convertDpToPx(getApplicationContext(),5), 4);
+        rv_floor_tiles.addItemDecoration(decoration);
+        rv_floor_tiles.setAdapter(adapterP);
+
+        rv_floor_tiles.addOnScrollListener(new EndlessRecyclerOnScrollListener() {
+            @Override
+            public void onLoadMore() {
+                addDataToList(productListingResponse);
+            }
+        });
+
+        productListingPresenter = new ProductListingPresenter(ThreadExecutor.getInstance(), MainThreadImpl.getInstance(), this);
+        productListingPresenter.getProducts(url);
+    }
+    /**
+     floorTiles product showend from here
+     */
+
+    /**
+     epoxyFloorin product show from here
+     */
+    public void epoxyFloorin(String url){
+
+        //url  https://colorceramics.com/api/v1/products/category/46
+
+
+        adapterP = new ProductListingAdapter(getApplicationContext(), mProducts, this);
+        //recyclerView = v.findViewById(R.id.product_list);
+
+
+        GridLayoutManager horizontalLayoutManager
+                = new GridLayoutManager(getApplicationContext(), 4);
+        rv_epoxyFloorin.setLayoutManager(horizontalLayoutManager);
+        //adapter.setClickListener(this);
+        RecyclerViewMargin decoration = new RecyclerViewMargin(convertDpToPx(getApplicationContext(),5), 4);
+        rv_epoxyFloorin.addItemDecoration(decoration);
+        rv_epoxyFloorin.setAdapter(adapterP);
+
+        rv_epoxyFloorin.addOnScrollListener(new EndlessRecyclerOnScrollListener() {
+            @Override
+            public void onLoadMore() {
+                addDataToList(productListingResponse);
+            }
+        });
+
+        productListingPresenter = new ProductListingPresenter(ThreadExecutor.getInstance(), MainThreadImpl.getInstance(), this);
+        productListingPresenter.getProducts(url);
+    }
+    /**
+     epoxyFloorin product showend from here
+     */
+
+    /**
+     sanitary product show from here
+     */
+    public void sanitary(String url){
+
+        //url  https://colorceramics.com/api/v1/products/category/46
+
+
+        sanitaryAdapter = new ProductListingAdapter(getApplicationContext(), mProducts, this);
+        //recyclerView = v.findViewById(R.id.product_list);
+
+
+        GridLayoutManager horizontalLayoutManager
+                = new GridLayoutManager(getApplicationContext(), 4);
+        rv_sanitary.setLayoutManager(horizontalLayoutManager);
+        //adapter.setClickListener(this);
+        RecyclerViewMargin decoration = new RecyclerViewMargin(sanitaryConvertDpToPx(getApplicationContext(),5), 4);
+        rv_sanitary.addItemDecoration(decoration);
+        rv_sanitary.setAdapter(sanitaryAdapter);
+
+        rv_sanitary.addOnScrollListener(new EndlessRecyclerOnScrollListener() {
+            @Override
+            public void onLoadMore() {
+                sanitaryAddDataToList(productListingResponse);
+            }
+        });
+
+        productListingPresenter = new ProductListingPresenter(ThreadExecutor.getInstance(), MainThreadImpl.getInstance(), this);
+        productListingPresenter.getProducts(url);
+    }
+    public int sanitaryConvertDpToPx(Context context, float dp) {
+        return (int) (dp * context.getResources().getDisplayMetrics().density);
+    }
+    public void sanitaryAddDataToList(ProductListingResponse productListingResponse){
+        if (productListingResponse != null && productListingResponse.getMeta() != null && !productListingResponse.getMeta().getCurrentPage().equals(productListingResponse.getMeta().getLastPage())){
+            productListingPresenter.getProducts(productListingResponse.getLinks().getNext().toString());
+        }
+    }
+    /**
+     sanitary product showend from here
+     */
+
+
 }
