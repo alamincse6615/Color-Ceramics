@@ -3,6 +3,7 @@ package com.activeitzone.activeecommercecms.Presentation.ui.activities.impl;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -42,6 +43,8 @@ public class ProductListingActivity extends BaseActivity implements ProductListi
 
         String title = getIntent().getStringExtra("title");
         String url = getIntent().getStringExtra("url");
+
+        Log.d("------------url________",url.toString());
 
         initializeActionBar();
         setTitle(title);

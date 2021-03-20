@@ -15,4 +15,5 @@
     <color name="colorWarning">#ffc107</color>
     <color name="colorDanger">#dc3545</color>
     <color name="colorInfo">#17a2b8</color>
+    <color name="colorWater">#81000000</color>
 </resources>

@@ -1,6 +1,7 @@
 package com.activeitzone.activeecommercecms.Presentation.ui.fragments.impl;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -24,7 +25,10 @@ import com.activeitzone.activeecommercecms.Models.SliderImage;
 import com.activeitzone.activeecommercecms.Network.response.AppSettingsResponse;
 import com.activeitzone.activeecommercecms.Network.response.AuctionBidResponse;
 import com.activeitzone.activeecommercecms.Network.response.AuthResponse;
+import com.activeitzone.activeecommercecms.Network.response.ProductListingResponse;
 import com.activeitzone.activeecommercecms.Presentation.presenters.HomePresenter;
+import com.activeitzone.activeecommercecms.Presentation.presenters.ProductListingPresenter;
+import com.activeitzone.activeecommercecms.Presentation.ui.activities.ProductListingView;
 import com.activeitzone.activeecommercecms.Presentation.ui.activities.impl.LoginActivity;
 import com.activeitzone.activeecommercecms.Presentation.ui.activities.impl.ProductDetailsActivity;
 import com.activeitzone.activeecommercecms.Presentation.ui.activities.impl.ProductListingActivity;
@@ -32,17 +36,20 @@ import com.activeitzone.activeecommercecms.Presentation.ui.adapters.AuctionProdu
 import com.activeitzone.activeecommercecms.Presentation.ui.adapters.BestSellingAdapter;
 import com.activeitzone.activeecommercecms.Presentation.ui.adapters.BrandAdapter;
 import com.activeitzone.activeecommercecms.Presentation.ui.adapters.FeaturedProductAdapter;
+import com.activeitzone.activeecommercecms.Presentation.ui.adapters.ProductListingAdapter;
 import com.activeitzone.activeecommercecms.Presentation.ui.adapters.TodaysDealAdapter;
 import com.activeitzone.activeecommercecms.Presentation.ui.adapters.TopCategoryAdapter;
 import com.activeitzone.activeecommercecms.Presentation.ui.fragments.HomeView;
 import com.activeitzone.activeecommercecms.Presentation.ui.listeners.AuctionClickListener;
 import com.activeitzone.activeecommercecms.Presentation.ui.listeners.BrandClickListener;
 import com.activeitzone.activeecommercecms.Presentation.ui.listeners.CategoryClickListener;
+import com.activeitzone.activeecommercecms.Presentation.ui.listeners.EndlessRecyclerOnScrollListener;
 import com.activeitzone.activeecommercecms.Presentation.ui.listeners.ProductClickListener;
 import com.activeitzone.activeecommercecms.R;
 import com.activeitzone.activeecommercecms.Threading.MainThreadImpl;
 import com.activeitzone.activeecommercecms.Utils.AppConfig;
 import com.activeitzone.activeecommercecms.Utils.CustomToast;
+import com.activeitzone.activeecommercecms.Utils.RecyclerViewMargin;
 import com.activeitzone.activeecommercecms.Utils.UserPrefs;
 import com.activeitzone.activeecommercecms.domain.executor.impl.ThreadExecutor;
 import com.bumptech.glide.Glide;
@@ -68,7 +75,9 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import cn.iwgang.countdownview.CountdownView;
 
-public class HomeFragment extends Fragment implements HomeView, CategoryClickListener, BaseSliderView.OnSliderClickListener, ViewPagerEx.OnPageChangeListener, ProductClickListener, BrandClickListener, AuctionClickListener {
+import static com.facebook.FacebookSdk.getApplicationContext;
+
+public class HomeFragment extends Fragment implements HomeView, CategoryClickListener, BaseSliderView.OnSliderClickListener, ViewPagerEx.OnPageChangeListener, ProductListingView, ProductClickListener, BrandClickListener, AuctionClickListener {
     private View v;
     List<SliderImage> sliderImages;
     private SliderLayout sliderLayout;
@@ -78,12 +87,22 @@ public class HomeFragment extends Fragment implements HomeView, CategoryClickLis
     private AuthResponse authResponse;
     private ProgressDialog progressDialog;
     private BottomSheetDialog dialog;
-    private RecyclerView auction_recyclerView;
+    private RecyclerView auction_recyclerView,product_list;
     private List<AuctionProduct> mAuctionProducts = new ArrayList<>();
     private  AuctionProductAdapter adapter;
     private TextView flash_deals_text;
     private CountdownView mCvCountdownView;
     private SwipeRefreshLayout swipe_container;
+    String ProductUrl = "https://colorceramics.com/api/v1/products/category/46";
+
+
+
+    private List<Product> mProducts = new ArrayList<>();
+    private ProductListingResponse productListingResponse = null;
+    private ProductListingPresenter productListingPresenter;
+    private ProductListingAdapter adapterP;
+
+
 
     @Nullable
     @Override
@@ -98,11 +117,15 @@ public class HomeFragment extends Fragment implements HomeView, CategoryClickLis
         flash_deals_text = v.findViewById(R.id.flash_deals_text);
         mCvCountdownView = (CountdownView) v.findViewById(R.id.countdown);
 
+        product_list = v.findViewById(R.id.product_list);
+
+        productListTest(ProductUrl);
+
         swipe_container = v.findViewById(R.id.swipe_container);
         swipe_container.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                
+
             }
         });
 
@@ -179,10 +202,10 @@ public class HomeFragment extends Fragment implements HomeView, CategoryClickLis
         if (products.size() > 0){
             RecyclerView recyclerView = v.findViewById(R.id.todays_deals);
             GridLayoutManager horizontalLayoutManager
-                    = new GridLayoutManager(getActivity(), 2, GridLayoutManager.VERTICAL, false);
+                    = new GridLayoutManager(getActivity(), 4, GridLayoutManager.VERTICAL, false);
             recyclerView.setLayoutManager(horizontalLayoutManager);
             TodaysDealAdapter adapter = new TodaysDealAdapter(getActivity(), products, this);
-            recyclerView.addItemDecoration( new LayoutMarginDecoration( 2,  AppConfig.convertDpToPx(getContext(), 10)) );
+            recyclerView.addItemDecoration( new LayoutMarginDecoration( 4,  AppConfig.convertDpToPx(getContext(), 10)) );
             recyclerView.setAdapter(adapter);
 
             todays_deal_section.setVisibility(View.VISIBLE);
@@ -198,10 +221,10 @@ public class HomeFragment extends Fragment implements HomeView, CategoryClickLis
 
             RecyclerView recyclerView = v.findViewById(R.id.flash_deals);
             GridLayoutManager horizontalLayoutManager
-                    = new GridLayoutManager(getActivity(), 2, GridLayoutManager.VERTICAL, false);
+                    = new GridLayoutManager(getActivity(), 4, GridLayoutManager.VERTICAL, false);
             recyclerView.setLayoutManager(horizontalLayoutManager);
             TodaysDealAdapter adapter = new TodaysDealAdapter(getActivity(), flashDeal.getProducts().getData(), this);
-            recyclerView.addItemDecoration( new LayoutMarginDecoration( 2,  AppConfig.convertDpToPx(getContext(), 10)) );
+            recyclerView.addItemDecoration( new LayoutMarginDecoration( 4,  AppConfig.convertDpToPx(getContext(), 5)) );
             recyclerView.setAdapter(adapter);
 
             flash_deal_section.setVisibility(View.VISIBLE);
@@ -421,5 +444,55 @@ public class HomeFragment extends Fragment implements HomeView, CategoryClickLis
         progressDialog.dismiss();
         CustomToast.showToast(getActivity(), auctionBidResponse.getMessage(), R.color.colorSuccess);
         homePresenter.getAuctionProducts();
+    }
+
+    @Override
+    public void setProducts(ProductListingResponse productListingResponse) {
+        mProducts.addAll(productListingResponse.getData());
+        this.productListingResponse = productListingResponse;
+        //progressBar.setVisibility(View.GONE);
+        adapterP.notifyDataSetChanged();
+
+        if (mProducts.size() <= 0){
+            //products_empty_text.setVisibility(View.VISIBLE);
+        }
+
+    }
+
+
+    public void productListTest(String url){
+
+        //url  https://colorceramics.com/api/v1/products/category/46
+
+
+        adapterP = new ProductListingAdapter(getApplicationContext(), mProducts, this);
+        //recyclerView = v.findViewById(R.id.product_list);
+
+
+        GridLayoutManager horizontalLayoutManager
+                = new GridLayoutManager(getApplicationContext(), 4);
+        product_list.setLayoutManager(horizontalLayoutManager);
+        //adapter.setClickListener(this);
+        RecyclerViewMargin decoration = new RecyclerViewMargin(convertDpToPx(getApplicationContext(),5), 4);
+        product_list.addItemDecoration(decoration);
+        product_list.setAdapter(adapterP);
+
+        product_list.addOnScrollListener(new EndlessRecyclerOnScrollListener() {
+            @Override
+            public void onLoadMore() {
+                addDataToList(productListingResponse);
+            }
+        });
+
+        productListingPresenter = new ProductListingPresenter(ThreadExecutor.getInstance(), MainThreadImpl.getInstance(), this);
+        productListingPresenter.getProducts(url);
+    }
+    public int convertDpToPx(Context context, float dp) {
+        return (int) (dp * context.getResources().getDisplayMetrics().density);
+    }
+    public void addDataToList(ProductListingResponse productListingResponse){
+        if (productListingResponse != null && productListingResponse.getMeta() != null && !productListingResponse.getMeta().getCurrentPage().equals(productListingResponse.getMeta().getLastPage())){
+            productListingPresenter.getProducts(productListingResponse.getLinks().getNext().toString());
+        }
     }
 }
