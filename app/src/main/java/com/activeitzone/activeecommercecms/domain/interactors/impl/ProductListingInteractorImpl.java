@@ -5,9 +5,11 @@ import android.util.Log;
 import com.activeitzone.activeecommercecms.Network.ApiClient;
 import com.activeitzone.activeecommercecms.Network.response.ProductListingResponse;
 import com.activeitzone.activeecommercecms.Network.services.ProductListingApiInterface;
+import com.activeitzone.activeecommercecms.Presentation.presenters.SanitaryProductListingPresenter;
 import com.activeitzone.activeecommercecms.domain.executor.Executor;
 import com.activeitzone.activeecommercecms.domain.executor.MainThread;
 import com.activeitzone.activeecommercecms.domain.interactors.ProductListingInteractor;
+import com.activeitzone.activeecommercecms.domain.interactors.SanitaryProductListingInteractor;
 import com.activeitzone.activeecommercecms.domain.interactors.base.AbstractInteractor;
 
 import retrofit2.Call;
@@ -24,6 +26,12 @@ public class ProductListingInteractorImpl extends AbstractInteractor {
         mCallback = callBack;
         this.url = url;
     }
+
+/*    public ProductListingInteractorImpl(Executor mExecutor, MainThread mMainThread, SanitaryProductListingInteractor.CallBack callBack, String url) {
+        super(mExecutor,mMainThread);
+        mCallback = callBack;
+        this.url = url;
+    }*/
 
     @Override
     public void run() {

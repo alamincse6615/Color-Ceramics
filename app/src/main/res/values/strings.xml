@@ -13,4 +13,20 @@
     <string name="fb_login_protocol_scheme">fb201826287505269</string>
 
     <string name="server_client_id">364205543335-cr273fmgdc9n2uqfkrlb6075uid84eht.apps.googleusercontent.com</string>
+    <string name="featured_categories">Featured Categories</string>
+    <string name="auction_products">Auction Products</string>
+    <string name="our_popular_brands">Our Popular Brands</string>
+    <string name="best_selling">Best Selling</string>
+    <string name="sanitary">Sanitary</string>
+    <string name="opoxy_flooring">Opoxy Flooring</string>
+    <string name="floor_tiles">Floor Tiles</string>
+    <string name="tiles">Tiles</string>
+    <string name="featured_products">Featured Products</string>
+    <string name="today_s_deal">Today\'s Deal</string>
+    <string name="flash_deal">Flash Deal</string>
+    <string name="bricks">Bricks</string>
+    <string name="granite">Granite</string>
+    <string name="marble">Marble</string>
+    <string name="sand">Sand</string>
+    <string name="stone">Stone</string>
 </resources>

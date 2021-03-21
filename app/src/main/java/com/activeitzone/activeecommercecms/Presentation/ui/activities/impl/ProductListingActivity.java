@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.activeitzone.activeecommercecms.Models.Product;
 import com.activeitzone.activeecommercecms.Network.response.ProductListingResponse;
+import com.activeitzone.activeecommercecms.Network.response.SanitaryProductListingResponse;
 import com.activeitzone.activeecommercecms.Presentation.presenters.ProductListingPresenter;
 import com.activeitzone.activeecommercecms.Presentation.ui.activities.ProductListingView;
 import com.activeitzone.activeecommercecms.Presentation.ui.adapters.ProductListingAdapter;
@@ -29,7 +30,10 @@ import java.util.List;
 public class ProductListingActivity extends BaseActivity implements ProductListingView, ProductClickListener {
 
     private List<Product> mProducts = new ArrayList<>();
+    private List<Product> mTitles = new ArrayList<>();
+    private List<Product> mSanitary = new ArrayList<>();
     private ProductListingResponse productListingResponse = null;
+    private SanitaryProductListingResponse sanitaryProductListingResponse = null;
     private ProductListingPresenter productListingPresenter;
     private ProductListingAdapter adapter;
     private RecyclerView recyclerView;
@@ -86,6 +90,26 @@ public class ProductListingActivity extends BaseActivity implements ProductListi
             products_empty_text.setVisibility(View.VISIBLE);
         }
     }
+
+    @Override
+    public void setTiles(ProductListingResponse productListingResponse) {
+        mTitles.addAll(productListingResponse.getData());
+        this.productListingResponse = productListingResponse;
+
+    }
+
+    @Override
+    public void setSanitary(SanitaryProductListingResponse sanitaryProductListingResponse) {
+        mSanitary.addAll(sanitaryProductListingResponse.getData());
+        this.sanitaryProductListingResponse = sanitaryProductListingResponse;
+
+    }
+
+   /* @Override
+    public void setSanitary(ProductListingResponse productListingResponse) {
+        mSanitary.addAll(productListingResponse.getData());
+        this.productListingResponse = productListingResponse;
+    }*/
 
     public void addDataToList(ProductListingResponse productListingResponse){
         if (productListingResponse != null && productListingResponse.getMeta() != null && !productListingResponse.getMeta().getCurrentPage().equals(productListingResponse.getMeta().getLastPage())){
