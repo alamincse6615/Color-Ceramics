@@ -32,9 +32,6 @@ public class ProductListingPresenter extends AbstractPresenter implements Produc
             productListingView.setProducts(productListingResponse);
         }
 
-        if (productListingView != null){
-            productListingView.setTiles(productListingResponse);
-        }
     }
 
     @Override

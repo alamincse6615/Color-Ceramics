@@ -12,8 +12,10 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.activeitzone.activeecommercecms.Models.Product;
+import com.activeitzone.activeecommercecms.Network.response.FloorTilesProductListingResponse;
 import com.activeitzone.activeecommercecms.Network.response.ProductListingResponse;
 import com.activeitzone.activeecommercecms.Network.response.SanitaryProductListingResponse;
+import com.activeitzone.activeecommercecms.Network.response.TilesProductListingResponse;
 import com.activeitzone.activeecommercecms.Presentation.presenters.ProductListingPresenter;
 import com.activeitzone.activeecommercecms.Presentation.ui.activities.ProductListingView;
 import com.activeitzone.activeecommercecms.Presentation.ui.adapters.ProductListingAdapter;
@@ -32,8 +34,15 @@ public class ProductListingActivity extends BaseActivity implements ProductListi
     private List<Product> mProducts = new ArrayList<>();
     private List<Product> mTitles = new ArrayList<>();
     private List<Product> mSanitary = new ArrayList<>();
+    private List<Product> mFloorTiles = new ArrayList<>();
+
     private ProductListingResponse productListingResponse = null;
     private SanitaryProductListingResponse sanitaryProductListingResponse = null;
+
+
+    private TilesProductListingResponse tilesProductListingResponse;
+    private FloorTilesProductListingResponse floorTilesProductListingResponse;
+
     private ProductListingPresenter productListingPresenter;
     private ProductListingAdapter adapter;
     private RecyclerView recyclerView;
@@ -92,17 +101,23 @@ public class ProductListingActivity extends BaseActivity implements ProductListi
     }
 
     @Override
-    public void setTiles(ProductListingResponse productListingResponse) {
-        mTitles.addAll(productListingResponse.getData());
-        this.productListingResponse = productListingResponse;
-
+    public void setTiles(TilesProductListingResponse tilesproductListingResponse) {
+        mTitles.addAll(tilesproductListingResponse.getData());
+        this.tilesProductListingResponse = tilesproductListingResponse;
     }
+
 
     @Override
     public void setSanitary(SanitaryProductListingResponse sanitaryProductListingResponse) {
         mSanitary.addAll(sanitaryProductListingResponse.getData());
         this.sanitaryProductListingResponse = sanitaryProductListingResponse;
 
+    }
+
+    @Override
+    public void setFloorTiles(FloorTilesProductListingResponse floorTilesProductListingResponse) {
+        mFloorTiles.addAll(floorTilesProductListingResponse.getData());
+        this.floorTilesProductListingResponse = floorTilesProductListingResponse;
     }
 
    /* @Override
