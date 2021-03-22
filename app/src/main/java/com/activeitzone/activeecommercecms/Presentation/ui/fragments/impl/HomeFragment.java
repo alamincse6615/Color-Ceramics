@@ -25,14 +25,26 @@ import com.activeitzone.activeecommercecms.Models.SliderImage;
 import com.activeitzone.activeecommercecms.Network.response.AppSettingsResponse;
 import com.activeitzone.activeecommercecms.Network.response.AuctionBidResponse;
 import com.activeitzone.activeecommercecms.Network.response.AuthResponse;
+import com.activeitzone.activeecommercecms.Network.response.BricksProductListingResponse;
+import com.activeitzone.activeecommercecms.Network.response.DEpoxyProductListingResponse;
 import com.activeitzone.activeecommercecms.Network.response.FloorTilesProductListingResponse;
+import com.activeitzone.activeecommercecms.Network.response.GraniteProductListingResponse;
+import com.activeitzone.activeecommercecms.Network.response.MarbleProductListingResponse;
 import com.activeitzone.activeecommercecms.Network.response.ProductListingResponse;
+import com.activeitzone.activeecommercecms.Network.response.SandProductListingResponse;
 import com.activeitzone.activeecommercecms.Network.response.SanitaryProductListingResponse;
+import com.activeitzone.activeecommercecms.Network.response.StoneProductListingResponse;
 import com.activeitzone.activeecommercecms.Network.response.TilesProductListingResponse;
+import com.activeitzone.activeecommercecms.Presentation.presenters.BricksProductListingPresenter;
+import com.activeitzone.activeecommercecms.Presentation.presenters.DEpoxyProductListingPresenter;
 import com.activeitzone.activeecommercecms.Presentation.presenters.FloorTilesProductListingPresenter;
+import com.activeitzone.activeecommercecms.Presentation.presenters.GraniteProductListingPresenter;
 import com.activeitzone.activeecommercecms.Presentation.presenters.HomePresenter;
+import com.activeitzone.activeecommercecms.Presentation.presenters.MarbleProductListingPresenter;
 import com.activeitzone.activeecommercecms.Presentation.presenters.ProductListingPresenter;
+import com.activeitzone.activeecommercecms.Presentation.presenters.SandProductListingPresenter;
 import com.activeitzone.activeecommercecms.Presentation.presenters.SanitaryProductListingPresenter;
+import com.activeitzone.activeecommercecms.Presentation.presenters.StoneProductListingPresenter;
 import com.activeitzone.activeecommercecms.Presentation.presenters.TilesProductListingPresenter;
 import com.activeitzone.activeecommercecms.Presentation.ui.activities.ProductListingView;
 import com.activeitzone.activeecommercecms.Presentation.ui.activities.impl.LoginActivity;
@@ -41,10 +53,16 @@ import com.activeitzone.activeecommercecms.Presentation.ui.activities.impl.Produ
 import com.activeitzone.activeecommercecms.Presentation.ui.adapters.AuctionProductAdapter;
 import com.activeitzone.activeecommercecms.Presentation.ui.adapters.BestSellingAdapter;
 import com.activeitzone.activeecommercecms.Presentation.ui.adapters.BrandAdapter;
+import com.activeitzone.activeecommercecms.Presentation.ui.adapters.BricksProductListingAdapter;
+import com.activeitzone.activeecommercecms.Presentation.ui.adapters.DEpoxyProductListingAdapter;
 import com.activeitzone.activeecommercecms.Presentation.ui.adapters.FeaturedProductAdapter;
 import com.activeitzone.activeecommercecms.Presentation.ui.adapters.FloorTilesProductListingAdapter;
+import com.activeitzone.activeecommercecms.Presentation.ui.adapters.GraniteProductListingAdapter;
+import com.activeitzone.activeecommercecms.Presentation.ui.adapters.MarbleProductListingAdapter;
 import com.activeitzone.activeecommercecms.Presentation.ui.adapters.ProductListingAdapter;
+import com.activeitzone.activeecommercecms.Presentation.ui.adapters.SandProductListingAdapter;
 import com.activeitzone.activeecommercecms.Presentation.ui.adapters.SanitaryProductListingAdapter;
+import com.activeitzone.activeecommercecms.Presentation.ui.adapters.StoneProductListingAdapter;
 import com.activeitzone.activeecommercecms.Presentation.ui.adapters.TilesProductListingAdapter;
 import com.activeitzone.activeecommercecms.Presentation.ui.adapters.TodaysDealAdapter;
 import com.activeitzone.activeecommercecms.Presentation.ui.adapters.TopCategoryAdapter;
@@ -84,11 +102,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import cn.iwgang.countdownview.CountdownView;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
 
@@ -98,7 +111,7 @@ public class HomeFragment extends Fragment implements HomeView, CategoryClickLis
     private SliderLayout sliderLayout;
     private HomePresenter homePresenter;
     private AnyViewIndicator gridIndicator;
-    private RelativeLayout auction_product_section, todays_deal_section, flash_deal_section;
+    private RelativeLayout auction_product_section, todays_deal_section, flash_deal_section,rl_sand;
     private AuthResponse authResponse;
     private ProgressDialog progressDialog;
     private BottomSheetDialog dialog;
@@ -117,22 +130,46 @@ public class HomeFragment extends Fragment implements HomeView, CategoryClickLis
     private List<Product> mTitles = new ArrayList<>();
     private List<Product> mSanitary = new ArrayList<>();
     private List<Product> mFloorTiles = new ArrayList<>();
+    private List<Product> mDEpoxy = new ArrayList<>();
+    private List<Product> mStone = new ArrayList<>();
+    private List<Product> mSand = new ArrayList<>();
+    private List<Product> mMarble = new ArrayList<>();
+    private List<Product> mBricks = new ArrayList<>();
+    private List<Product> mGranite = new ArrayList<>();
 
     private ProductListingResponse productListingResponse = null;
     private SanitaryProductListingResponse sanitaryproductListingResponse = null;
     private TilesProductListingResponse tilesproductListingResponse = null;
     private FloorTilesProductListingResponse floorTilesproductListingResponse = null;
+    private DEpoxyProductListingResponse dEpoxyProductListingResponse = null;
+    private StoneProductListingResponse stoneProductListingResponse = null;
+    private SandProductListingResponse sandProductListingResponse = null;
+    private MarbleProductListingResponse marbleProductListingResponse = null;
+    private BricksProductListingResponse bricksProductListingResponse = null;
+    private GraniteProductListingResponse graniteProductListingResponse = null;
 
 
     private ProductListingPresenter productListingPresenter;
     private TilesProductListingPresenter tilesproductListingPresenter;
     private SanitaryProductListingPresenter sanitaryProductListingPresenter;
     private FloorTilesProductListingPresenter floorTilesproductListingPresenter;
+    private DEpoxyProductListingPresenter dEpoxyProductListingPresenter;
+    private StoneProductListingPresenter stoneProductListingPresenter;
+    private SandProductListingPresenter sandProductListingPresenter;
+    private MarbleProductListingPresenter marbleProductListingPresenter;
+    private BricksProductListingPresenter bricksProductListingPresenter;
+    private GraniteProductListingPresenter graniteProductListingPresenter;
 
-    private ProductListingAdapter adapterP,opoxyFlooringAdapter,stoneAdapter,sandAdapter,marbleAdapter,bricksAdapter,graniteAdapter,dEpoxyAdapter;
+    private ProductListingAdapter adapterP;
     private SanitaryProductListingAdapter sanitaryAdapter;
     private TilesProductListingAdapter tilesAdapter;
     private FloorTilesProductListingAdapter floorTilesAdapter;
+    private DEpoxyProductListingAdapter dEPoxyAdapter;
+    private StoneProductListingAdapter stoneAdapter;
+    private SandProductListingAdapter sandAdapter;
+    private MarbleProductListingAdapter marbleAdapter;
+    private GraniteProductListingAdapter graniteAdapter;
+    private BricksProductListingAdapter bricksAdapter;
     //tiles end
 
     String tilesUrl = "https://colorceramics.com/api/v1/products/category/46";
@@ -161,6 +198,8 @@ public class HomeFragment extends Fragment implements HomeView, CategoryClickLis
         flash_deals_text = v.findViewById(R.id.flash_deals_text);
         mCvCountdownView = (CountdownView) v.findViewById(R.id.countdown);
 
+        rl_sand = v.findViewById(R.id.rl_sand);
+
         product_list = v.findViewById(R.id.product_list);
         rv_floor_tiles = v.findViewById(R.id.rv_floor_tiles);
         rv_epoxyFloorin = v.findViewById(R.id.rv_epoxyFloorin);
@@ -176,6 +215,12 @@ public class HomeFragment extends Fragment implements HomeView, CategoryClickLis
         tilesProducts(tilesUrl);
         sanitary(sanitaryUrl);
         floorTilesProducts(floorTilesUrl);
+        epoxyFloorin(epoxyFlooringUrl);
+        stone(stoneUrl);
+        sand(sandUrl);
+        marble(marbleUrl);
+        granite(graniteUrl);
+        bricks(bricksUrl);
 
 
         /*epoxyFloorin(epoxyFlooringUrl);
@@ -570,6 +615,46 @@ public class HomeFragment extends Fragment implements HomeView, CategoryClickLis
         floorTilesAdapter.notifyDataSetChanged();
     }
 
+    @Override
+    public void setDEpoxy(DEpoxyProductListingResponse dEpoxyProductListingResponse) {
+        mDEpoxy.addAll(dEpoxyProductListingResponse.getData());
+        dEPoxyAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void setStone(StoneProductListingResponse stoneProductListingResponse) {
+        mStone.addAll(stoneProductListingResponse.getData());
+        stoneAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void setSand(SandProductListingResponse sandProductListingResponse) {
+        mSand.addAll(sandProductListingResponse.getData());
+        sandAdapter.notifyDataSetChanged();
+
+        if (mSand.size()==0){
+            rl_sand.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void setMarble(MarbleProductListingResponse marbleProductListingResponse) {
+        mMarble.addAll(marbleProductListingResponse.getData());
+        marbleAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void setGranite(GraniteProductListingResponse graniteProductListingResponse) {
+        mGranite.addAll(graniteProductListingResponse.getData());
+        graniteAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void setBricks(BricksProductListingResponse bricksProductListingResponse) {
+        mBricks.addAll(bricksProductListingResponse.getData());
+        bricksAdapter.notifyDataSetChanged();
+    }
+
     /**
      tiles product show from here
      */
@@ -643,6 +728,213 @@ public class HomeFragment extends Fragment implements HomeView, CategoryClickLis
     }
 
 
+    public void epoxyFloorin(String url){
+
+        dEPoxyAdapter = new DEpoxyProductListingAdapter(getApplicationContext(), mDEpoxy, this);
+        GridLayoutManager horizontalLayoutManager
+                = new GridLayoutManager(getApplicationContext(), 4);
+        rv_epoxyFloorin.setLayoutManager(horizontalLayoutManager);
+        RecyclerViewMargin decoration = new RecyclerViewMargin(dEpoxyConvertDpToPx(getApplicationContext(),5), 4);
+        rv_epoxyFloorin.addItemDecoration(decoration);
+        rv_epoxyFloorin.setAdapter(dEPoxyAdapter);
+
+        rv_epoxyFloorin.addOnScrollListener(new EndlessRecyclerOnScrollListener() {
+            @Override
+            public void onLoadMore() {
+                dEpoxyAddDataToList(dEpoxyProductListingResponse);
+            }
+        });
+
+        dEpoxyProductListingPresenter = new DEpoxyProductListingPresenter(ThreadExecutor.getInstance(), MainThreadImpl.getInstance(), this);
+        dEpoxyProductListingPresenter.getDEpoxy(url);
+    }
+    public int dEpoxyConvertDpToPx(Context context, float dp) {
+        return (int) (dp * context.getResources().getDisplayMetrics().density);
+    }
+    public void dEpoxyAddDataToList(DEpoxyProductListingResponse dEpoxyProductListingResponse){
+        if (dEpoxyProductListingResponse != null && dEpoxyProductListingResponse.getMeta() != null && !dEpoxyProductListingResponse.getMeta().getCurrentPage().equals(dEpoxyProductListingResponse.getMeta().getLastPage())){
+            dEpoxyProductListingPresenter.getDEpoxy(dEpoxyProductListingResponse.getLinks().getNext().toString());
+        }
+    }
+
+
+
+
+    public void stone(String url){
+
+        stoneAdapter = new StoneProductListingAdapter(getApplicationContext(), mStone, this);
+        GridLayoutManager horizontalLayoutManager
+                = new GridLayoutManager(getApplicationContext(), 4);
+        rv_stone.setLayoutManager(horizontalLayoutManager);
+        //RecyclerViewMargin decoration = new RecyclerViewMargin(dEpoxyConvertDpToPx(getApplicationContext(),5), 4);
+        RecyclerViewMargin decoration = new RecyclerViewMargin(StoneConvertDpToPx(getApplicationContext(),5), 4);
+        rv_stone.addItemDecoration(decoration);
+        rv_stone.setAdapter(stoneAdapter);
+
+        rv_stone.addOnScrollListener(new EndlessRecyclerOnScrollListener() {
+            @Override
+            public void onLoadMore() {
+                StoneAddDataToList(stoneProductListingResponse);
+            }
+        });
+
+        stoneProductListingPresenter = new StoneProductListingPresenter(ThreadExecutor.getInstance(), MainThreadImpl.getInstance(), this);
+        stoneProductListingPresenter.getStone(url);
+    }
+
+    public int StoneConvertDpToPx(Context context, float dp) {
+        return (int) (dp * context.getResources().getDisplayMetrics().density);
+    }
+    public void StoneAddDataToList(StoneProductListingResponse stoneProductListingResponse){
+        if (stoneProductListingResponse != null && stoneProductListingResponse.getMeta() != null && !stoneProductListingResponse.getMeta().getCurrentPage().equals(stoneProductListingResponse.getMeta().getLastPage())){
+            stoneProductListingPresenter.getStone(stoneProductListingResponse.getLinks().getNext().toString());
+        }
+    }
+
+
+    public void sand(String r_url){
+
+        sandAdapter = new SandProductListingAdapter(getApplicationContext(), mSand, this);
+        GridLayoutManager horizontalLayoutManager
+                = new GridLayoutManager(getApplicationContext(), 4);
+        rv_sand.setLayoutManager(horizontalLayoutManager);
+        RecyclerViewMargin decoration = new RecyclerViewMargin(SandConvertDpToPx(getApplicationContext(),5), 4);
+        rv_sand.addItemDecoration(decoration);
+        rv_sand.setAdapter(sandAdapter);
+
+        rv_sand.addOnScrollListener(new EndlessRecyclerOnScrollListener() {
+            @Override
+            public void onLoadMore() {
+                SandAddDataToList(sandProductListingResponse);
+            }
+        });
+
+        sandProductListingPresenter = new SandProductListingPresenter(ThreadExecutor.getInstance(), MainThreadImpl.getInstance(), this);
+        sandProductListingPresenter.getSand(r_url);
+    }
+    public int SandConvertDpToPx(Context context, float dp) {
+        return (int) (dp * context.getResources().getDisplayMetrics().density);
+    }
+    public void SandAddDataToList(SandProductListingResponse sandProductListingResponse){
+        if (sandProductListingResponse != null && sandProductListingResponse.getMeta() != null && !sandProductListingResponse.getMeta().getCurrentPage().equals(sandProductListingResponse.getMeta().getLastPage())){
+            sandProductListingPresenter.getSand(sandProductListingResponse.getLinks().getNext().toString());
+        }
+    }
+
+
+    public void marble(String url){
+
+        marbleAdapter = new MarbleProductListingAdapter(getApplicationContext(), mMarble, this);
+
+        GridLayoutManager horizontalLayoutManager
+                = new GridLayoutManager(getApplicationContext(), 4);
+        rv_marble.setLayoutManager(horizontalLayoutManager);
+        //adapter.setClickListener(this);
+        RecyclerViewMargin decoration = new RecyclerViewMargin(MarbleConvertDpToPx(getApplicationContext(),5), 4);
+        rv_marble.addItemDecoration(decoration);
+        rv_marble.setAdapter(marbleAdapter);
+
+        rv_marble.addOnScrollListener(new EndlessRecyclerOnScrollListener() {
+            @Override
+            public void onLoadMore() {
+                MarbleAddDataToList(marbleProductListingResponse);
+            }
+        });
+
+        marbleProductListingPresenter = new MarbleProductListingPresenter(ThreadExecutor.getInstance(), MainThreadImpl.getInstance(), this);
+        marbleProductListingPresenter.getMarble(url);
+    }
+    public int MarbleConvertDpToPx(Context context, float dp) {
+        return (int) (dp * context.getResources().getDisplayMetrics().density);
+    }
+    public void MarbleAddDataToList(MarbleProductListingResponse marbleProductListingResponse){
+        if (marbleProductListingResponse != null && marbleProductListingResponse.getMeta() != null && !marbleProductListingResponse.getMeta().getCurrentPage().equals(marbleProductListingResponse.getMeta().getLastPage())){
+            marbleProductListingPresenter.getMarble(marbleProductListingResponse.getLinks().getNext().toString());
+        }
+    }
+
+
+
+
+
+
+
+    public void bricks(String url){
+
+
+        bricksAdapter = new BricksProductListingAdapter(getApplicationContext(), mBricks, this);
+
+
+        GridLayoutManager horizontalLayoutManager
+                = new GridLayoutManager(getApplicationContext(), 4);
+        rv_bricks.setLayoutManager(horizontalLayoutManager);
+        //adapter.setClickListener(this);
+        RecyclerViewMargin decoration = new RecyclerViewMargin(BriksConvertDpToPx(getApplicationContext(),5), 4);
+        rv_bricks.addItemDecoration(decoration);
+        rv_bricks.setAdapter(bricksAdapter);
+
+        rv_bricks.addOnScrollListener(new EndlessRecyclerOnScrollListener() {
+            @Override
+            public void onLoadMore() {
+                BriksAddDataToList(bricksProductListingResponse);
+            }
+        });
+
+        bricksProductListingPresenter = new BricksProductListingPresenter(ThreadExecutor.getInstance(), MainThreadImpl.getInstance(), this);
+        bricksProductListingPresenter.getBricks(url);
+    }
+    public int BriksConvertDpToPx(Context context, float dp) {
+        return (int) (dp * context.getResources().getDisplayMetrics().density);
+    }
+    public void BriksAddDataToList(BricksProductListingResponse bricksProductListingResponse){
+        if (bricksProductListingResponse != null && bricksProductListingResponse.getMeta() != null && !bricksProductListingResponse.getMeta().getCurrentPage().equals(bricksProductListingResponse.getMeta().getLastPage())){
+            bricksProductListingPresenter.getBricks(bricksProductListingResponse.getLinks().getNext().toString());
+        }
+    }
+
+
+
+
+
+    public void granite(String url){
+
+        //url  https://colorceramics.com/api/v1/products/category/46
+
+
+        graniteAdapter = new GraniteProductListingAdapter(getApplicationContext(), mGranite, this);
+        //recyclerView = v.findViewById(R.id.product_list);
+
+
+        GridLayoutManager horizontalLayoutManager
+                = new GridLayoutManager(getApplicationContext(), 4);
+        rv_granite.setLayoutManager(horizontalLayoutManager);
+        //adapter.setClickListener(this);
+        RecyclerViewMargin decoration = new RecyclerViewMargin(GraniteConvertDpToPx(getApplicationContext(),5), 4);
+        rv_granite.addItemDecoration(decoration);
+        rv_granite.setAdapter(graniteAdapter);
+
+        rv_granite.addOnScrollListener(new EndlessRecyclerOnScrollListener() {
+            @Override
+            public void onLoadMore() {
+                GraniteAddDataToList(graniteProductListingResponse);
+            }
+        });
+
+        graniteProductListingPresenter = new GraniteProductListingPresenter(ThreadExecutor.getInstance(), MainThreadImpl.getInstance(), this);
+        graniteProductListingPresenter.getGranite(url);
+    }
+    public int GraniteConvertDpToPx(Context context, float dp) {
+        return (int) (dp * context.getResources().getDisplayMetrics().density);
+    }
+    public void GraniteAddDataToList(GraniteProductListingResponse graniteProductListingResponse){
+        if (graniteProductListingResponse != null && graniteProductListingResponse.getMeta() != null && !graniteProductListingResponse.getMeta().getCurrentPage().equals(graniteProductListingResponse.getMeta().getLastPage())){
+            graniteProductListingPresenter.getGranite(graniteProductListingResponse.getLinks().getNext().toString());
+        }
+    }
+
+
+
+
 
 
     /**
@@ -714,6 +1006,7 @@ public class HomeFragment extends Fragment implements HomeView, CategoryClickLis
         productListingPresenter = new ProductListingPresenter(ThreadExecutor.getInstance(), MainThreadImpl.getInstance(), this);
         productListingPresenter.getProducts(url);
     }
+
     *//**
      epoxyFloorin product showend from here
      *//*
@@ -812,35 +1105,8 @@ public class HomeFragment extends Fragment implements HomeView, CategoryClickLis
 
     *//**
      sand product show from here
-     *//*
-    public void sand(String url){
-
-        //url  https://colorceramics.com/api/v1/products/category/46
-
-
-        sandAdapter = new ProductListingAdapter(getApplicationContext(), mProducts, this);
-        //recyclerView = v.findViewById(R.id.product_list);
-
-
-        GridLayoutManager horizontalLayoutManager
-                = new GridLayoutManager(getApplicationContext(), 4);
-        rv_sand.setLayoutManager(horizontalLayoutManager);
-        //adapter.setClickListener(this);
-        RecyclerViewMargin decoration = new RecyclerViewMargin(convertDpToPx(getApplicationContext(),5), 4);
-        rv_sand.addItemDecoration(decoration);
-        rv_sand.setAdapter(opoxyFlooringAdapter);
-
-        rv_sand.addOnScrollListener(new EndlessRecyclerOnScrollListener() {
-            @Override
-            public void onLoadMore() {
-                addDataToList(productListingResponse);
-            }
-        });
-
-        productListingPresenter = new ProductListingPresenter(ThreadExecutor.getInstance(), MainThreadImpl.getInstance(), this);
-        productListingPresenter.getProducts(url);
-    }
-    *//**
+     */
+    /**
      sand product showend from here
      *//*
 

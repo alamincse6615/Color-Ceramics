@@ -12,9 +12,15 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.activeitzone.activeecommercecms.Models.Product;
+import com.activeitzone.activeecommercecms.Network.response.BricksProductListingResponse;
+import com.activeitzone.activeecommercecms.Network.response.DEpoxyProductListingResponse;
 import com.activeitzone.activeecommercecms.Network.response.FloorTilesProductListingResponse;
+import com.activeitzone.activeecommercecms.Network.response.GraniteProductListingResponse;
+import com.activeitzone.activeecommercecms.Network.response.MarbleProductListingResponse;
 import com.activeitzone.activeecommercecms.Network.response.ProductListingResponse;
+import com.activeitzone.activeecommercecms.Network.response.SandProductListingResponse;
 import com.activeitzone.activeecommercecms.Network.response.SanitaryProductListingResponse;
+import com.activeitzone.activeecommercecms.Network.response.StoneProductListingResponse;
 import com.activeitzone.activeecommercecms.Network.response.TilesProductListingResponse;
 import com.activeitzone.activeecommercecms.Presentation.presenters.ProductListingPresenter;
 import com.activeitzone.activeecommercecms.Presentation.ui.activities.ProductListingView;
@@ -35,6 +41,12 @@ public class ProductListingActivity extends BaseActivity implements ProductListi
     private List<Product> mTitles = new ArrayList<>();
     private List<Product> mSanitary = new ArrayList<>();
     private List<Product> mFloorTiles = new ArrayList<>();
+    private List<Product> mDEpoxy = new ArrayList<>();
+    private List<Product> mStone = new ArrayList<>();
+    private List<Product> mSand = new ArrayList<>();
+    private List<Product> mMarble = new ArrayList<>();
+    private List<Product> mBricks = new ArrayList<>();
+    private List<Product> mGranite = new ArrayList<>();
 
     private ProductListingResponse productListingResponse = null;
     private SanitaryProductListingResponse sanitaryProductListingResponse = null;
@@ -42,6 +54,12 @@ public class ProductListingActivity extends BaseActivity implements ProductListi
 
     private TilesProductListingResponse tilesProductListingResponse;
     private FloorTilesProductListingResponse floorTilesProductListingResponse;
+    private DEpoxyProductListingResponse dEpoxyProductListingResponse;
+    private StoneProductListingResponse stoneProductListingResponse;
+    private SandProductListingResponse sandProductListingResponse;
+    private MarbleProductListingResponse marbleProductListingResponse;
+    private GraniteProductListingResponse graniteProductListingResponse;
+    private BricksProductListingResponse bricksProductListingResponse;
 
     private ProductListingPresenter productListingPresenter;
     private ProductListingAdapter adapter;
@@ -120,11 +138,42 @@ public class ProductListingActivity extends BaseActivity implements ProductListi
         this.floorTilesProductListingResponse = floorTilesProductListingResponse;
     }
 
-   /* @Override
-    public void setSanitary(ProductListingResponse productListingResponse) {
-        mSanitary.addAll(productListingResponse.getData());
-        this.productListingResponse = productListingResponse;
-    }*/
+    @Override
+    public void setDEpoxy(DEpoxyProductListingResponse dEpoxyProductListingResponse) {
+        mDEpoxy.addAll(dEpoxyProductListingResponse.getData());
+        this.dEpoxyProductListingResponse = dEpoxyProductListingResponse;
+    }
+
+    @Override
+    public void setStone(StoneProductListingResponse stoneProductListingResponse) {
+        mStone.addAll(stoneProductListingResponse.getData());
+        this.stoneProductListingResponse = stoneProductListingResponse;
+    }
+
+    @Override
+    public void setSand(SandProductListingResponse sandProductListingResponse) {
+        mSand.addAll(sandProductListingResponse.getData());
+        this.sandProductListingResponse = sandProductListingResponse;
+    }
+
+    @Override
+    public void setMarble(MarbleProductListingResponse marbleProductListingResponse) {
+        mMarble.addAll(marbleProductListingResponse.getData());
+        this.marbleProductListingResponse = marbleProductListingResponse;
+    }
+
+    @Override
+    public void setGranite(GraniteProductListingResponse graniteProductListingResponse) {
+        mGranite.addAll(graniteProductListingResponse.getData());
+        this.graniteProductListingResponse = graniteProductListingResponse;
+    }
+
+    @Override
+    public void setBricks(BricksProductListingResponse bricksProductListingResponse) {
+        mBricks.addAll(bricksProductListingResponse.getData());
+        this.bricksProductListingResponse = bricksProductListingResponse;
+    }
+
 
     public void addDataToList(ProductListingResponse productListingResponse){
         if (productListingResponse != null && productListingResponse.getMeta() != null && !productListingResponse.getMeta().getCurrentPage().equals(productListingResponse.getMeta().getLastPage())){
